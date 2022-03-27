@@ -8,17 +8,18 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/cosos/firefly/cloudlib"
+
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/securityinsights/armsecurityinsights"
 )
 
 const IntelUrl = "https://urlhaus.abuse.ch/downloads/csv_online/"
-const DefaultProvider = "Microsoft"
 
-func GetMaliciousCSV() ([]byte, error) {
+func SentinelMaliciousIPWatchlist(client *armsecurityinsights.WatchlistsClient, resourcegroup, workspace string) error {
 	maliciousIPs := [][]string{{"IP", "Threat", "Tags"}}
 	resp, err := http.DefaultClient.Get(IntelUrl)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer resp.Body.Close()
 	csvReader := csv.NewReader(resp.Body)
@@ -26,7 +27,7 @@ func GetMaliciousCSV() ([]byte, error) {
 	csvReader.Comment = '#'
 	allRecords, err := csvReader.ReadAll()
 	if err != nil {
-		return nil, err
+		return err
 	}
 	for _, item := range allRecords {
 		urldata, err := url.Parse(item[2])
@@ -40,24 +41,21 @@ func GetMaliciousCSV() ([]byte, error) {
 	csvWriter := csv.NewWriter(buf)
 	err = csvWriter.WriteAll(maliciousIPs)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return buf.Bytes(), nil
-}
-
-func CreateOrUpdateWatchListFromFile(client *armsecurityinsights.WatchlistsClient, resourcegroup, workspace, alias, name, contenttype, provider, key, content string) error {
-	_, err := client.CreateOrUpdate(
+	_, err = client.CreateOrUpdate(
 		context.TODO(),
 		resourcegroup,
-		workspace, alias,
+		workspace,
+		"urlhaus",
 		armsecurityinsights.Watchlist{
 			Properties: &armsecurityinsights.WatchlistProperties{
-				DisplayName:    &name,
-				ContentType:    &contenttype,
-				Provider:       &provider,
-				ItemsSearchKey: &key,
+				DisplayName:    cloudlib.String("MaliciousIPs-urlhaus"),
+				ContentType:    cloudlib.String("text/csv"),
+				Provider:       cloudlib.String("Microsoft"),
+				ItemsSearchKey: cloudlib.String("IP"),
 				Source:         armsecurityinsights.Source("Local file").ToPtr(),
-				RawContent:     &content,
+				RawContent:     cloudlib.String(buf.String()),
 			},
 		},
 		&armsecurityinsights.WatchlistsClientCreateOrUpdateOptions{},
