@@ -45,19 +45,25 @@ func GetMaliciousCSV() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func CreateOrUpdateWatchListFromFile(client *armsecurityinsights.WatchlistsClient, resourcegroup, workspace, alias, name, contenttype string) error {
-	resp, err := client.CreateOrUpdate(
+func CreateOrUpdateWatchListFromFile(client *armsecurityinsights.WatchlistsClient, resourcegroup, workspace, alias, name, contenttype, provider, key, content string) error {
+	_, err := client.CreateOrUpdate(
 		context.TODO(),
 		resourcegroup,
 		workspace, alias,
 		armsecurityinsights.Watchlist{
 			Properties: &armsecurityinsights.WatchlistProperties{
-				DisplayName: &name,
-				ContentType: &contenttype,
-				Provider:    ,
-				Source:      armsecurityinsights.Source("Local file").ToPtr(),
+				DisplayName:    &name,
+				ContentType:    &contenttype,
+				Provider:       &provider,
+				ItemsSearchKey: &key,
+				Source:         armsecurityinsights.Source("Local file").ToPtr(),
+				RawContent:     &content,
 			},
 		},
 		&armsecurityinsights.WatchlistsClientCreateOrUpdateOptions{},
 	)
+	if err != nil {
+		return err
+	}
+	return nil
 }
