@@ -1,3 +1,3 @@
-module github.com/cosos/firefly/echoserver
+module echoserver
 
 go 1.18

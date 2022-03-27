@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: echoserver
-        image: ""
+        image: "mucloud.azurecr.io/common/echoserver:v1.6"
         ports:
         - containerPort: 80
 ---

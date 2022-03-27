@@ -1,4 +1,4 @@
-module github.com/cosos/firefly/sampleadc
+module sampleadc
 
 go 1.18
 
