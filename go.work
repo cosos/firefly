@@ -2,8 +2,4 @@ go 1.18
 
 use (
 	./cloudlib
-	./common/echoserver
-	./common/sampleG
-	./common/sampleadc
-	./sentinel/watchlists
 )

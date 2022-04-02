@@ -12,8 +12,6 @@ import (
 	"github.com/AzureAD/microsoft-authentication-library-for-go/apps/confidential"
 )
 
-// AuthResult contains the subset of results from token acquisition operation in ConfidentialClientApplication
-// For details see https://aka.ms/msal-net-authenticationresult
 type authResult struct {
 	accessToken    string
 	expiresOn      time.Time
@@ -22,21 +20,10 @@ type authResult struct {
 }
 
 func clientAssertionBearerAuthorizerCallback(tenantID, resource string) (*autorest.BearerAuthorizer, error) {
-	// Azure AD Workload Identity webhook will inject the following env vars
-	// 	AZURE_CLIENT_ID with the clientID set in the service account annotation
-	// 	AZURE_TENANT_ID with the tenantID set in the service account annotation. If not defined, then
-	// 	the tenantID provided via azure-wi-webhook-config for the webhook will be used.
-	// 	AZURE_FEDERATED_TOKEN_FILE is the service account token path
-	// 	AZURE_AUTHORITY_HOST is the AAD authority hostname
 	clientID := os.Getenv("AZURE_CLIENT_ID")
 	tokenFilePath := os.Getenv("AZURE_FEDERATED_TOKEN_FILE")
 	authorityHost := os.Getenv("AZURE_AUTHORITY_HOST")
 
-	// generate a token using the msal confidential client
-	// this will always generate a new token request to AAD
-	// TODO (aramase) consider using acquire token silent (https://github.com/Azure/azure-workload-identity/issues/76)
-
-	// read the service account token from the filesystem
 	signedAssertion, err := readJWTFromFS(tokenFilePath)
 	if err != nil {
 		return nil, errors.New(err.Error() + " failed to read service account token")
@@ -45,7 +32,6 @@ func clientAssertionBearerAuthorizerCallback(tenantID, resource string) (*autore
 	if err != nil {
 		return nil, errors.New(err.Error() + " failed to create confidential creds")
 	}
-	// create the confidential client to request an AAD token
 	confidentialClientApp, err := confidential.New(
 		clientID,
 		cred,
@@ -54,9 +40,7 @@ func clientAssertionBearerAuthorizerCallback(tenantID, resource string) (*autore
 		return nil, errors.New(err.Error() + " failed to create confidential client app")
 	}
 
-	// trim the suffix / if exists
 	resource = strings.TrimSuffix(resource, "/")
-	// .default needs to be added to the scope
 	if !strings.HasSuffix(resource, ".default") {
 		resource += "/.default"
 	}
