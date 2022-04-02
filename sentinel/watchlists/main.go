@@ -1,9 +1,24 @@
 package main
 
-import "log"
+import (
+	"log"
+	"os"
 
-const IntelUrl = "https://urlhaus.abuse.ch/downloads/csv_online/"
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/arm"
+	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/securityinsights/armsecurityinsights"
+	"github.com/cosos/firefly/cloudlib/azurecloud"
+)
 
 func main() {
-	log.Println(IntelUrl)
+	subscription := os.Getenv("Subscription")
+	creds, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		log.Panic(err.Error())
+	}
+	client := armsecurityinsights.NewWatchlistsClient(subscription, creds, &arm.ClientOptions{})
+	err = azurecloud.SentinelMaliciousIPWatchlist(client, "core", "sentinel")
+	if err != nil {
+		log.Panic(err.Error())
+	}
 }
