@@ -3,6 +3,7 @@ package threatfox
 import (
 	"bytes"
 	"encoding/json"
+	"log"
 	"net/http"
 	"time"
 )
@@ -64,16 +65,19 @@ func GetThreatFoxIoCSet(client *http.Client, days int) (*ThreatFoxIOCSet, error)
 	json.NewEncoder(data).Encode(reqBody)
 	req, err := http.NewRequest(http.MethodPost, threatfox_url, data)
 	if err != nil {
+		log.Println("Falied to get new request:", err.Error())
 		return nil, err
 	}
 	resp, err := client.Do(req)
 	if err != nil {
+		log.Println("Request Failed:", err.Error())
 		return nil, err
 	}
 	var result ThreatFoxIOCSet
 	defer resp.Body.Close()
 	err = json.NewDecoder(resp.Body).Decode(&result)
 	if err != nil {
+		log.Println("Decode Failed:", err.Error())
 		return nil, err
 	}
 	return &result, nil
