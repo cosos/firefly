@@ -36,7 +36,7 @@ func CheckIndicatorStatus(client *armsecurityinsights.ThreatIntelligenceIndicato
 }
 
 func CheckIndicator(client *armsecurityinsights.ThreatIntelligenceIndicatorClient, ctx context.Context, resourcegroupName, workspaceName, indicatorName string) bool {
-	result, err := client.Get(ctx, resourcegroupName, workspaceName, indicatorName, &armsecurityinsights.ThreatIntelligenceIndicatorClientGetOptions{})
+	result, err := client.Get(ctx, resourcegroupName, workspaceName, indicatorName, nil)
 	if err != nil {
 		zap.S().Error(err.Error())
 	}
