@@ -30,20 +30,23 @@ const threatfox_url = "https://threatfox-api.abuse.ch/api/v1/"
 
 // IOC define the ioc data
 type IOC struct {
-	Id               *string  `json:"id"`
-	IoC              *string  `json:"ioc"`
-	IoCType          *string  `json:"ioc_type"`
-	ThreatType       *string  `json:"threat_type"`
-	Malware          *string  `json:"malware"`
-	MalwarePrintable *string  `json:"malware_printable"`
-	MalwareAlias     *string  `json:"malware_alias"`
-	ConfidenceLevel  *int     `json:"confidence_level"`
-	FirstSeen        *string  `json:"first_seen"`
-	LastSeen         *string  `json:"last_seen"`
-	Reporter         *string  `json:"reporter"`
-	Reference        *string  `json:"reference"`
-	ThreatFoxLink    *string  `json:"threatfox_link"`
-	Tags             []string `json:"tags"`
+	Id                    *string  `json:"id"`
+	IoC                   *string  `json:"ioc"`
+	IoCType               *string  `json:"ioc_type"`
+	IoCTypeDescription    *string  `json:"ioc_type_desc"`
+	ThreatType            *string  `json:"threat_type"`
+	ThreatTypeDescription *string  `json:"threat_type_desc"`
+	Malware               *string  `json:"malware"`
+	MalwarePrintable      *string  `json:"malware_printable"`
+	MalwareAlias          *string  `json:"malware_alias"`
+	MalwareMalpedia       *string  `json:"malware_malpedia"`
+	ConfidenceLevel       *int32   `json:"confidence_level"`
+	FirstSeen             *string  `json:"first_seen"`
+	LastSeen              *string  `json:"last_seen"`
+	Reporter              *string  `json:"reporter"`
+	Reference             *string  `json:"reference"`
+	ThreatFoxLink         *string  `json:"threatfox_link"`
+	Tags                  []string `json:"tags"`
 }
 
 // ThreatFoxIOCSet type
