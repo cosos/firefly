@@ -37,7 +37,7 @@ type IOC struct {
 	Malware          *string  `json:"malware"`
 	MalwarePrintable *string  `json:"malware_printable"`
 	MalwareAlias     *string  `json:"malware_alias"`
-	ConfidenceLevel  *string  `json:"confidence_level"`
+	ConfidenceLevel  *int     `json:"confidence_level"`
 	FirstSeen        *string  `json:"first_seen"`
 	LastSeen         *string  `json:"last_seen"`
 	Reporter         *string  `json:"reporter"`
