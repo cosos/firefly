@@ -3,9 +3,7 @@ package threatfox
 import (
 	"bytes"
 	"encoding/json"
-	"log"
 	"net/http"
-	"time"
 )
 
 const threatfox_url = "https://threatfox-api.abuse.ch/api/v1/"
@@ -32,20 +30,20 @@ const threatfox_url = "https://threatfox-api.abuse.ch/api/v1/"
 
 // IOC define the ioc data
 type IOC struct {
-	Id               *string   `json:"id"`
-	IoC              *string   `json:"ioc"`
-	IoCType          *string   `json:"ioc_type"`
-	ThreatType       *string   `json:"threat_type"`
-	Malware          *string   `json:"malware"`
-	MalwarePrintable *string   `json:"malware_printable"`
-	MalwareAlias     *string   `json:"malware_alias"`
-	ConfidenceLevel  *string   `json:"confidence_level"`
-	FirstSeen        time.Time `json:"first_seen"`
-	LastSeen         time.Time `json:"last_seen"`
-	Reporter         *string   `json:"reporter"`
-	Reference        *string   `json:"reference"`
-	ThreatFoxLink    *string   `json:"threatfox_link"`
-	Tags             []string  `json:"tags"`
+	Id               *string  `json:"id"`
+	IoC              *string  `json:"ioc"`
+	IoCType          *string  `json:"ioc_type"`
+	ThreatType       *string  `json:"threat_type"`
+	Malware          *string  `json:"malware"`
+	MalwarePrintable *string  `json:"malware_printable"`
+	MalwareAlias     *string  `json:"malware_alias"`
+	ConfidenceLevel  *string  `json:"confidence_level"`
+	FirstSeen        *string  `json:"first_seen"`
+	LastSeen         *string  `json:"last_seen"`
+	Reporter         *string  `json:"reporter"`
+	Reference        *string  `json:"reference"`
+	ThreatFoxLink    *string  `json:"threatfox_link"`
+	Tags             []string `json:"tags"`
 }
 
 // ThreatFoxIOCSet type
@@ -65,19 +63,16 @@ func GetThreatFoxIoCSet(client *http.Client, days int) (*ThreatFoxIOCSet, error)
 	json.NewEncoder(data).Encode(reqBody)
 	req, err := http.NewRequest(http.MethodPost, threatfox_url, data)
 	if err != nil {
-		log.Println("Falied to get new request:", err.Error())
 		return nil, err
 	}
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Println("Request Failed:", err.Error())
 		return nil, err
 	}
 	var result ThreatFoxIOCSet
 	defer resp.Body.Close()
 	err = json.NewDecoder(resp.Body).Decode(&result)
 	if err != nil {
-		log.Println("Decode Failed:", err.Error())
 		return nil, err
 	}
 	return &result, nil
