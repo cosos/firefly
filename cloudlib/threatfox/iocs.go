@@ -58,7 +58,7 @@ type GetIOCRequestInput struct {
 	Days  int    `json:"days"`
 }
 
-func GetThreatFoxIoCSet(client http.Client, days int) (*ThreatFoxIOCSet, error) {
+func GetThreatFoxIoCSet(client *http.Client, days int) (*ThreatFoxIOCSet, error) {
 	reqBody := GetIOCRequestInput{Query: "get_iocs", Days: days}
 	data := new(bytes.Buffer)
 	json.NewEncoder(data).Encode(reqBody)
