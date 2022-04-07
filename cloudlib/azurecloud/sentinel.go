@@ -40,9 +40,6 @@ func CheckIndicator(client *armsecurityinsights.ThreatIntelligenceIndicatorClien
 	if err != nil {
 		zap.S().Error(err.Error())
 	}
-	if result.RawResponse.StatusCode == 200 {
-		zap.S().Info(result.GetThreatIntelligenceInformation().Name)
-		return true
-	}
+	zap.S().Info(result.GetThreatIntelligenceInformation().Name)
 	return false
 }
