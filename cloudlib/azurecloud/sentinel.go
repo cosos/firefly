@@ -40,6 +40,11 @@ func CheckIndicator(client *armsecurityinsights.ThreatIntelligenceIndicatorClien
 	if err != nil {
 		zap.S().Error(err.Error())
 	}
-	zap.S().Info(result.GetThreatIntelligenceInformation().Name)
+	var temp []byte
+	err = result.UnmarshalJSON(temp)
+	if err != nil {
+		zap.S().Error(err.Error())
+	}
+	zap.S().Info(string(temp))
 	return false
 }
