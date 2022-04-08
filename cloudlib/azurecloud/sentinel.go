@@ -2,6 +2,7 @@ package azurecloud
 
 import (
 	"context"
+	"log"
 
 	"go.uber.org/zap"
 
@@ -38,13 +39,13 @@ func CheckIndicatorStatus(client *armsecurityinsights.ThreatIntelligenceIndicato
 func CheckIndicator(client *armsecurityinsights.ThreatIntelligenceIndicatorClient, ctx context.Context, resourcegroupName, workspaceName, indicatorName string) bool {
 	result, err := client.Get(ctx, resourcegroupName, workspaceName, indicatorName, nil)
 	if err != nil {
-		zap.S().Error(err.Error())
+		log.Println(err.Error())
 	}
 	var temp []byte
 	err = result.UnmarshalJSON(temp)
 	if err != nil {
-		zap.S().Error(err.Error())
+		log.Println(err.Error())
 	}
-	zap.S().Info(string(temp))
+	log.Println(string(temp))
 	return false
 }
