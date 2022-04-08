@@ -3,7 +3,7 @@ module github.com/cosos/firefly/cloudlib
 go 1.18
 
 require (
-	github.com/Azure/azure-sdk-for-go/sdk/azcore v0.21.0 // indirect
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v0.22.0 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v0.13.2 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/internal v0.9.1 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/securityinsights/armsecurityinsights v0.1.1 // indirect
