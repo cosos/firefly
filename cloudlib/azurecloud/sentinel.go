@@ -20,7 +20,13 @@ func ListIndicators(client *armsecurityinsights.ThreatIntelligenceIndicatorsClie
 		}
 		for _, v := range pager.PageResponse().Value {
 			result := v.GetThreatIntelligenceInformation()
-			log.Println(*result.ID, *result.Name, *result.Kind, *result.Type)
+			var temp []byte
+			err := result.UnmarshalJSON(temp)
+			if err != nil {
+				log.Println("UnmarshalJosn Failed: ", err.Error())
+				continue
+			}
+			log.Panicln(string(temp))
 		}
 	}
 }
