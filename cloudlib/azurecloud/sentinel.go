@@ -37,15 +37,11 @@ func CheckIndicatorStatus(client *armsecurityinsights.ThreatIntelligenceIndicato
 }
 
 func CheckIndicator(client *armsecurityinsights.ThreatIntelligenceIndicatorClient, ctx context.Context, resourcegroupName, workspaceName, indicatorName string) bool {
-	result, err := client.Get(ctx, resourcegroupName, workspaceName, indicatorName, nil)
+	resp, err := client.Get(ctx, resourcegroupName, workspaceName, indicatorName, nil)
 	if err != nil {
 		log.Println(err.Error())
 	}
-	var temp []byte
-	err = result.UnmarshalJSON(temp)
-	if err != nil {
-		log.Println(err.Error())
-	}
-	log.Println(string(temp))
+	result := resp.ThreatIntelligenceIndicatorClientGetResult.GetThreatIntelligenceInformation()
+	log.Println(*result.Name)
 	return false
 }
